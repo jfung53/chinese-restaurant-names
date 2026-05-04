@@ -1,3 +1,9 @@
+# os
+.DS_Store
+
+# images for reports
+images/
+
 # History files
 .Rhistory
 .Rapp.history
