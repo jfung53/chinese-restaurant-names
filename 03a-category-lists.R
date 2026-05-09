@@ -3,10 +3,8 @@
 # ------ sourced by 03-text-features.R
 
 
-setwd("/Users/jocelyn/Documents/Pratt/Projects/chinese-restaurant-names")
-
-unigrams <- read.csv("data/vocabulary_unigrams.csv")
-bigrams  <- read.csv("data/vocabulary_bigrams.csv")
+unigrams <- read.csv(here("data", "vocabulary_unigrams.csv"))
+bigrams  <- read.csv(here("data", "vocabulary_bigrams.csv"))
 
 
 # ------ build category lookup vectors from vocabulary CSVs

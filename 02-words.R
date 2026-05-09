@@ -4,16 +4,12 @@
 # ------ extract words and bigrams to categorize for
 # ------ logistic regression and charts
 
-setwd("/Users/jocelyn/Documents/Pratt/Projects/chinese-restaurant-names")
-
-library(dplyr)      # for data cleaning
-library(tidyr)      # for data tidying
-library(tidytext)   # for text analysis
-library(stringr)    # for string operations
+library(here)
+source(here("00-setup.R"))
 
 # ------ bring in the data
 
-restaurants <- readRDS("data/restaurants_clean.rds")
+restaurants <- readRDS(here("data", "restaurants_clean.rds"))
 
 # define project-specific stop words
 corpus_stops <- tibble(word = "restaurant")
@@ -93,8 +89,8 @@ unigrams <- unigrams %>%
 
 # ------ export data
 
-write.csv(unigrams, "data/vocabulary_unigrams.csv", row.names = FALSE)
-write.csv(bigrams, "data/vocabulary_bigrams.csv", row.names = FALSE)
+write.csv(unigrams, here("data", "vocabulary_unigrams.csv"), row.names = FALSE)
+write.csv(bigrams, here("data", "vocabulary_bigrams.csv"), row.names = FALSE)
 
 # next: manual review of bigrams to adjust the phrase ratio threshold and
 # flag exceptions on either side of the threshold (0.5)

@@ -2,16 +2,12 @@
 # ------ text categorization
 
 
-# ------ setup and libraries
+# ------ setup
 
-setwd("/Users/jocelyn/Documents/Pratt/Projects/chinese-restaurant-names")
+library(here)
+source(here("00-setup.R"))
 
-library(dplyr)      # for data cleaning
-library(tidytext)   # for text analysis
-library(lexicon)    # for english dictionary
-library(stringr)    # for string operations
-
-restaurants <- readRDS("data/restaurants_clean.rds")
+restaurants <- readRDS(here("data", "restaurants_clean.rds"))
 
 # ------ isolate non-english words
 
@@ -29,11 +25,11 @@ non_english <- restaurants %>%
 # export to categorize the romanizations
 non_english %>%
   count(word, sort = TRUE) %>%
-  write.csv(file = "data/non_english_words.csv", row.names = FALSE)
+  write.csv(file = here("data", "non_english_words.csv"), row.names = FALSE)
 
 # bring categorized romanizations back in
 # too large and messy to include so i separated them into their own file
-source("romanization-vectors.R")
+source(here("romanization-vectors.R"))
 
 # add a flag to identify restaurant names that contain any romanized words
 restaurants <- restaurants %>%
@@ -62,7 +58,7 @@ restaurants %>%
 # ------ category flags
 
 # bring in category lists
-source("03a-category-lists.R")
+source(here("03a-category-lists.R"))
 
 # apply category flags to restaurants
 restaurants <- restaurants %>%
@@ -86,4 +82,4 @@ restaurants <- restaurants %>%
 
 # ------ export
 
-saveRDS(restaurants, "data/restaurants_features.rds")
+saveRDS(restaurants, here("data", "text_features.rds"))

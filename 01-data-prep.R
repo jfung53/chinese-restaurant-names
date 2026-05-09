@@ -2,17 +2,14 @@
 # ------ data prep
 
 
-# ------ setup and libraries
+# ------ setup
 
-setwd("/Users/jocelyn/Documents/Pratt/Projects/chinese-restaurant-names")
-
-library(dplyr)      # for data cleaning
-library(ggplot2)    # for visualizing
-library(stringr)    # for string operations
+library(here)
+source(here("00-setup.R"))
 
 # ------ bring in data
 
-restaurants <- read.csv("data/us_restaurants_with_pop.csv")
+restaurants <- read.csv(here("data", "us_restaurants_with_pop.csv"))
 glimpse(restaurants)
 summary(restaurants)
 
@@ -155,5 +152,5 @@ restaurants %>%
 
 # ------ export cleaned data
 
-write.csv(restaurants, "data/restaurants_clean.csv", row.names = FALSE)
-saveRDS(restaurants, file = "data/restaurants_clean.rds")
+write.csv(restaurants, here("data", "restaurants_clean.csv"), row.names = FALSE)
+saveRDS(restaurants, file = here("data", "restaurants_clean.rds"))
