@@ -12,6 +12,7 @@ bigrams  <- read.csv("data/vocabulary_bigrams.csv")
 # ------ build category lookup vectors from vocabulary CSVs
 
 # --- categories aren't mutually exclusive, restaurants may have multiple
+# --- most of this was done manually with some help from an LLM
 
 # place names, cities, cardinal directions, geographic features
 cat_places <- c(
