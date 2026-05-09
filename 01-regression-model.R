@@ -26,7 +26,7 @@ summary(restaurants)
 
 # ------ clean the data
 
-# take a look at the distribution of urba/rural locale types
+# take a look at the distribution of urban/rural locale types
 restaurants %>%
   count(LOCALE, LOC_NAME) %>%
   arrange(LOCALE)
@@ -63,106 +63,8 @@ hist(restaurants$pct_chinese, main = "Raw", xlab = "pct_chinese")
 hist(restaurants$log_pct_chinese, main = "Log transformed", xlab = "log_pct_chinese")
 
 
-# ------ isolate non-english words
-
-# use lexicon library's grady_augmented list of english words and names
-non_english <- restaurants %>%
-  select(fsq_place_id, name) %>%
-  mutate(name_clean = tolower(name),
-         # there are a lot of words with apostrophe-s (andy's, for example)
-         # need to remove these possessives before tokenizing
-         # \b only matches 's at the end of a word
-         name_clean = str_remove_all(name_clean, "'s\\b")) %>%
-  unnest_tokens(word, name_clean) %>%
-  anti_join(data.frame(word = grady_augmented), by = "word")
-
-# hand off non-english df to an LLM to categorize
-non_english %>%
-  count(word, sort = TRUE) %>%
-  write.csv(file = "non_english_words.csv", row.names = FALSE)
-
-# paste in the phonetically romanized chinese words from LLM
-mandarin_romanized <- c(
-  "wei", "cheng", "xing", "jing", "hua", "feng", "yan", "chuan",
-  "shang", "xiang", "yi", "xin", "hao", "liu", "lu", "tian",
-  "chu", "lao", "huang", "chun", "ji", "sheng", "bei", "zheng",
-  "jia", "shan", "chao", "hui", "zhang", "lan", "qing", "du",
-  "ming", "bao", "xiao", "xian", "zhou", "yang", "wu", "shi",
-  "hai", "yu", "fu", "jiang", "zhu", "wang", "tang", "lin",
-  "mei", "jun", "hong", "feng", "nan", "dong", "xi", "tai",
-  "ping", "long", "yun", "zhen", "ren", "sun", "guo", "he"
-)
-
-cantonese_romanized <- c(
-  "wah", "wong", "hing", "fong", "yuen", "cheung", "kwong",
-  "kwok", "kwai", "kwan", "lok", "shing", "fung", "moy", "choy",
-  "leung", "loong", "yeung", "tsang", "tsui", "luen", "heung",
-  "chau", "chee", "heng", "kee", "wai", "sai", "pak", "mui",
-  "tak", "kok", "yee", "foo", "shing", "wun", "suey", "lai",
-  "fook", "yat", "kwan", "hoi", "yip", "lim", "pang", "sing"
-)
-
-# generous of the LLM to give me both dialects, let's combine them
-romanized_all <- c(mandarin_romanized, cantonese_romanized)
-
-# exceptions to romanized words
-exceptions <- c("Hong Kong", "Chop Suey", "Asian Chao", 
-                "Kung Fu", "Dim Sum", "Won Ton", "Wonton", "Chow Mein")
-
-# add a flag to identify restaurant names that contain any romanized words
-restaurants <- restaurants %>%
-  mutate(
-    name_for_romanization = str_remove_all(
-      corrected_name,
-      regex(str_c(exceptions, collapse = "|"), ignore_case = TRUE)
-    ),
-    romanized = str_detect(
-      tolower(name_for_romanization),
-      str_c("\\b(", str_c(romanized_all, collapse = "|"), ")\\b")
-    )
-  )
-
-# double check a sample of the results
-# this is where i decided to add the exception list, which excluded about 2000
-restaurants %>%
-  filter(romanized == TRUE) %>%
-  select(corrected_name) %>%
-  sample_n(100) %>%
-  print()
-
-
-
-# ------ identify large chain restaurants
-
-# look at top 80 (arbitrary number)
-restaurants %>%
-  count(name, sort = TRUE) %>%
-  head(80) %>%
-  as.data.frame() %>%
-  print()
-
-# names of chain restaurants (gathered from googling, nothing fancy)
-chain_names <- c(
-  "Panda Express", "P.F. Chang's", "Manchu Wok", "Wow Bao",
-  "Asian Chao", "Pei Wei", "Leeann Chin", "Pick Up Stix",
-  "Chinese Gourmet Express"
-)
-
-# add chain flag via partial match
-restaurants <- restaurants %>%
-  mutate(chain = str_detect(name, str_c(chain_names, collapse = "|")))
-
-# examine results
-chain_restaurants <- restaurants %>%
-  filter(chain == TRUE) %>%
-  count(name, sort = TRUE)
-
-# a handful of names using "panda express" but are not part of the chain
-# i'll just ignore them since there's only 5
-
-
 # ------ handle misspellings with the help of an LLM
-# note to self: move this to run first later
+# note: try stringdist next time
 
 # paste in LLM's lookup table
 misspelling_lookup <- c(
@@ -251,6 +153,105 @@ restaurants %>%
   filter(misspelling == TRUE) %>%
   select(name, corrected_name) %>%
   head(20)
+
+
+
+# ------ isolate non-english words
+
+# use lexicon library's grady_augmented list of english words and names
+non_english <- restaurants %>%
+  select(fsq_place_id, corrected_name) %>%
+  mutate(name_clean = tolower(corrected_name),
+         # there are a lot of words with apostrophe-s (andy's, for example)
+         # need to remove these possessives before tokenizing
+         # \b only matches 's at the end of a word
+         name_clean = str_remove_all(name_clean, "'s\\b")) %>%
+  unnest_tokens(word, name_clean) %>%
+  anti_join(data.frame(word = grady_augmented), by = "word")
+
+# hand off non-english df to an LLM to categorize
+non_english %>%
+  count(word, sort = TRUE) %>%
+  write.csv(file = "non_english_words.csv", row.names = FALSE)
+
+# paste in the phonetically romanized chinese words from LLM
+mandarin_romanized <- c(
+  "wei", "cheng", "xing", "jing", "hua", "feng", "yan", "chuan",
+  "shang", "xiang", "yi", "xin", "hao", "liu", "lu", "tian",
+  "chu", "lao", "huang", "chun", "ji", "sheng", "bei", "zheng",
+  "jia", "shan", "chao", "hui", "zhang", "lan", "qing", "du",
+  "ming", "bao", "xiao", "xian", "zhou", "yang", "wu", "shi",
+  "hai", "yu", "fu", "jiang", "zhu", "wang", "tang", "lin",
+  "mei", "jun", "hong", "feng", "nan", "dong", "xi", "tai",
+  "ping", "long", "yun", "zhen", "ren", "sun", "guo", "he"
+)
+
+cantonese_romanized <- c(
+  "wah", "wong", "hing", "fong", "yuen", "cheung", "kwong",
+  "kwok", "kwai", "kwan", "lok", "shing", "fung", "moy", "choy",
+  "leung", "loong", "yeung", "tsang", "tsui", "luen", "heung",
+  "chau", "chee", "heng", "kee", "wai", "sai", "pak", "mui",
+  "tak", "kok", "yee", "foo", "shing", "wun", "suey", "lai",
+  "fook", "yat", "kwan", "hoi", "yip", "lim", "pang", "sing"
+)
+
+# generous of the LLM to give me both dialects, let's combine them
+romanized_all <- c(mandarin_romanized, cantonese_romanized)
+
+# exceptions to romanized words
+exceptions <- c("Hong Kong", "Chop Suey", "Asian Chao", 
+                "Kung Fu", "Dim Sum", "Won Ton", "Wonton", "Chow Mein")
+
+# add a flag to identify restaurant names that contain any romanized words
+restaurants <- restaurants %>%
+  mutate(
+    name_for_romanization = str_remove_all(
+      corrected_name,
+      regex(str_c(exceptions, collapse = "|"), ignore_case = TRUE)
+    ),
+    romanized = str_detect(
+      tolower(name_for_romanization),
+      str_c("\\b(", str_c(romanized_all, collapse = "|"), ")\\b")
+    )
+  )
+
+# double check a sample of the results
+# this is where i decided to add the exception list, which excluded about 2000
+restaurants %>%
+  filter(romanized == TRUE) %>%
+  select(corrected_name) %>%
+  sample_n(100) %>%
+  print()
+
+
+
+# ------ identify large chain restaurants
+
+# look at top 80 (arbitrary number)
+restaurants %>%
+  count(name, sort = TRUE) %>%
+  head(80) %>%
+  as.data.frame() %>%
+  print()
+
+# names of chain restaurants (gathered from googling, nothing fancy)
+chain_names <- c(
+  "Panda Express", "P.F. Chang's", "Manchu Wok", "Wow Bao",
+  "Asian Chao", "Pei Wei", "Leeann Chin", "Pick Up Stix",
+  "Chinese Gourmet Express"
+)
+
+# add chain flag via partial match
+restaurants <- restaurants %>%
+  mutate(chain = str_detect(corrected_name, str_c(chain_names, collapse = "|")))
+
+# examine results
+chain_restaurants <- restaurants %>%
+  filter(chain == TRUE) %>%
+  count(corrected_name, sort = TRUE)
+
+# a handful of names using "panda express" but are not part of the chain
+# i'll just ignore them since there's only 5
 
 
 # ------ logistic regression
