@@ -12,6 +12,8 @@ source(here("00-setup.R"))
 restaurants <- readRDS(here("data", "restaurants_clean.rds"))
 
 # define project-specific stop words
+# i created this because i wasn't sure if i'd need to add more
+# ultimately decided not to
 corpus_stops <- tibble(word = "restaurant")
 
 # clean up names and use corrected misspellings
@@ -87,10 +89,11 @@ unigrams <- unigrams %>%
   mutate(is_phrase_member = word %in% phrase_words)
 
 
+# STOP HERE! note to self: don't run this unless the source data changed
 # ------ export data
 
-write.csv(unigrams, here("data", "vocabulary_unigrams.csv"), row.names = FALSE)
-write.csv(bigrams, here("data", "vocabulary_bigrams.csv"), row.names = FALSE)
+write.csv(unigrams, here("data", "vocabulary_unigrams_new.csv"), row.names = FALSE)
+write.csv(bigrams, here("data", "vocabulary_bigrams_new.csv"), row.names = FALSE)
 
 # next: manual review of bigrams to adjust the phrase ratio threshold and
 # flag exceptions on either side of the threshold (0.5)

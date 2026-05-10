@@ -99,6 +99,7 @@ ggplot(county_locale, aes(x = locale_group, y = log_pct_chinese)) +
 
 ggsave(here("images", "log_pct_chinese_by_locale_county.png"), width = 6, height = 4)
 
+
 # ------ plot word category data
 
 restaurants %>%

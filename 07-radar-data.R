@@ -35,6 +35,38 @@ locale_averages <- restaurants %>%
   rename_with(~ str_remove(., "cat_"), all_of(category_cols))
 
 
+# ------ asked an LLM for help previewing a radar chart in R
+# ------ this turned out TERRIBLY, i need to reconsider
+
+library(purrr)
+
+reference_levels <- c(0.25, 0.5, 0.75, 1.0)
+
+reference_df <- map_dfr(reference_levels, function(r) {
+  angle_df %>%
+    mutate(x = r * cos(angle), y = r * sin(angle), level = r) %>%
+    bind_rows(slice(., 1))
+})
+
+ggplot() +
+  geom_polygon(data = reference_df,
+               aes(x = x, y = y, group = level),
+               fill = NA, color = "grey80", linewidth = 0.4) +
+  geom_polygon(data = locale_cart,
+               aes(x = x, y = y),
+               fill = "steelblue", alpha = 0.4, color = "steelblue") +
+  geom_polygon(data = single_cart,
+               aes(x = x, y = y),
+               fill = "black", alpha = 0.5, color = "black") +
+  geom_text(data = label_df,
+            aes(x = x, y = y, label = category), size = 3) +
+  coord_fixed() +
+  theme_void() +
+  labs(title = paste("Radar preview —", restaurant_locale, "average vs. single restaurant"))
+
+ggsave(here("images", "radar_preview.png"), width = 7, height = 7)
+
+
 # ------ export
 
 radar_data <- list(
