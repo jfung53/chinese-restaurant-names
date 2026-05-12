@@ -35,7 +35,7 @@ unigrams <- clean_names %>%
   anti_join(corpus_stops, by = "word") %>%
   filter(nchar(word) >= 3) %>%
   count(word, sort = TRUE) %>%
-  filter(n >= 5) # frequency threshold
+  filter(n >= 5) # frequency threshold - maybe this should be 0 for unigrams
 
 # unnest into bigrams
 # this will catch things like "golden dragon" or "hong kong"
