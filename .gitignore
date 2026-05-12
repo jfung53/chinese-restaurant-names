@@ -1,6 +1,9 @@
 # os
 .DS_Store
 
+# Claude Code local worktrees / metadata
+.claude/
+
 # images for reports
 images/
 
