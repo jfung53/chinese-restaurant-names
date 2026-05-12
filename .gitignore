@@ -10,6 +10,9 @@ images/
 # notes to self
 notes/
 
+# local analysis (not shared)
+regression-model.R
+
 # History files
 .Rhistory
 .Rapp.history
