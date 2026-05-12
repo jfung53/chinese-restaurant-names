@@ -8,11 +8,7 @@ An analysis of naming patterns in Chinese restaurants across the United States, 
 
 ## Research question
 
-How do restaurant names signal to different audiences in different places? 
-
-Do Chinese restaurants in areas with larger proportions of Chinese residents use more culturally specific naming strategies (phonetic romanizations, cultural symbols, place names, or the food itself) compared to restaurants in areas with smaller Chinese populations? 
-
-How do restaurant names change from the most urban to the most rural locales? 
+Do Chinese restaurants in areas with larger Chinese-American populations use more culturally specific naming strategies (phonetic romanizations, cultural symbols, place names, or the food itself) compared to restaurants in areas with smaller Chinese populations?
 
 ---
 
