@@ -49,13 +49,13 @@ Restaurant names were tokenized into unigrams and bigrams which were then catego
 
 | Category | Examples |
 |----------|---------|
-| **Places** | China, Shanghai, Mandarin, Canton |
-| **Symbols** | Lucky, Imperial, Dynasty, Fortune |
-| **Names** | Wong, Tony, Uncle, Mama |
-| **Nature** | Dragon, Lotus, Bamboo, Golden |
-| **Food** | Noodle, Dumpling, Wok, Dim Sum |
-| **Format** | Buffet, Express, Kitchen, Bistro |
-| **Romanized** | Names containing transliterations of Chinese words |
+| **Places** | China, Chinese, Shanghai, Mandarin, Canton, Szechuan, East, Asian |
+| **Symbols** | Lucky, Dynasty, Fortune, 888, Silk, Rickshaw, Golden |
+| **Names** | Lee, Chen, Peter, Amy, Uncle, Mama, Master |
+| **Nature** | Garden, Panda, Dragon, Lotus, Bamboo, Golden, Jade |
+| **Food** | Noodle, Dumpling, Wok, Dim Sum, Spicy, Ginger, Fried, Chopstick |
+| **Format** | Buffet, Express, Kitchen, Bistro, Fast, Chef, Gourmet, Fusion |
+| **Romanized** | Transliterated words such as Chen, Sun, Chow, Ling, Zhao, Liang |
 
 ---
 
