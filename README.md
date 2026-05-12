@@ -1,6 +1,6 @@
 # Chinese Restaurant Names
 
-An analysis of naming patterns in Chinese restaurants across the United States, examining whether phonetically romanized names (e.g. *Jade Wok*, *Golden Phoenix*) cluster in areas with higher Chinese population concentration and in urban versus rural locales.
+An analysis of naming patterns in Chinese restaurants across the United States comparing areas with higher Chinese population concentrations and in urban versus rural locales.
 
 **[View the interactive map →](https://www.jocelynfung.com/data/chinese-restaurants)**
 
@@ -8,7 +8,11 @@ An analysis of naming patterns in Chinese restaurants across the United States, 
 
 ## Research question
 
-Do Chinese restaurants in areas with larger Chinese-American populations use more culturally specific naming strategies (phonetic romanizations, cultural symbols, place names, or the food itself) compared to restaurants in areas with smaller Chinese populations?
+How do restaurant names signal to different audiences in different places?
+
+Do Chinese restaurants in areas with larger proportions of Chinese residents use more culturally specific naming strategies (phonetic romanizations, cultural symbols, place names, or the food itself) compared to restaurants in areas with smaller Chinese populations?
+
+How much do restaurant names change from the most urban to the most rural locales?
 
 ---
 
